@@ -1,0 +1,38 @@
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: #333;
+  cursor: url('remote-cursor.png'), auto; /* Replace 'remote-cursor.png' with your actual cursor image path */
+}
+
+.tv-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.tv {
+  width: 150px;
+  height: 100px;
+  background: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.screen {
+  width: 90%;
+  height: 80%;
+  background: #000;
+  transition: background 0.5s, box-shadow 0.5s;
+}
+
+.red { background: red; box-shadow: 0 0 10px red; }
+.orange { background: orange; box-shadow: 0 0 10px orange; }
+.yellow { background: yellow; box-shadow: 0 0 10px yellow; }
+.green { background: green; box-shadow: 0 0 10px green; }
+.blue { background: blue; box-shadow: 0 0 10px blue; }
+.violet { background: violet; box-shadow: 0 0 10px violet; }
+.pink { background: pink; box-shadow: 0 0 10px pink; }
