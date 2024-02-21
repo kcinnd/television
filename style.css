@@ -34,5 +34,6 @@ body {
 .yellow { background: yellow; box-shadow: 0 0 10px yellow; }
 .green { background: green; box-shadow: 0 0 10px green; }
 .blue { background: blue; box-shadow: 0 0 10px blue; }
-.violet { background: violet; box-shadow: 0 0 10px violet; }
+.violet { background: #800080; /* A more traditional purple */
+  box-shadow: 0 0 10px #800080; /* Matching shadow color */}
 .pink { background: pink; box-shadow: 0 0 10px pink; }
