@@ -1,5 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'];
+  let colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'];
+  function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    }
+  }
+
+  // Shuffle the colors array for random assignment
+  shuffleArray(colors);
   document.querySelectorAll('.tv').forEach((tv, index) => {
     tv.addEventListener('click', () => {
       const screen = tv.querySelector('.screen');
