@@ -3,7 +3,7 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: #333;
+  background: #adc4b2; /* Updated background color */
   cursor: url('remote-cursor.png'), auto; /* Replace 'remote-cursor.png' with your actual cursor image path */
 }
 
