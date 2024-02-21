@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'pink'];
+  const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'];
   document.querySelectorAll('.tv').forEach((tv, index) => {
     tv.addEventListener('click', () => {
       const screen = tv.querySelector('.screen');
