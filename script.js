@@ -1,16 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     const tvs = document.querySelectorAll('.tv');
-    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'violet']; // Colors for 6 TVs
+    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']; // Colors for 6 TVs
     let indices = shuffle([...Array(tvs.length).keys()]); // Shuffle indices for random assignment
 
-    // Assign color functionality to the first 6 TVs
-    indices.slice(0, 6).forEach((index, i) => assignColorTV(tvs[index], colors[i]));
+    // Assign functionalities based on shuffled indices
+    // First 6 for color change functionality
+    indices.slice(0, 6).forEach((index, i) => {
+        assignColorFunctionality(tvs[index], colors[i]);
+    });
 
-    // Assign number functionality to the next 6 TVs
-    indices.slice(6, 12).forEach((index, i) => assignNumberTV(tvs[index], i + 1));
+    // Next 6 for number display functionality
+    indices.slice(6, 12).forEach((index, i) => {
+        assignNumberFunctionality(tvs[index], i + 1); // Numbers 1-6
+    });
 
-    // Assign white functionality with intense glow to the remaining TVs
-    indices.slice(12).forEach(index => assignWhiteTV(tvs[index]));
+    // Remaining for white screen functionality
+    indices.slice(12).forEach(index => {
+        assignWhiteFunctionality(tvs[index]);
+    });
 });
 
 function shuffle(array) {
@@ -21,49 +28,47 @@ function shuffle(array) {
     return array;
 }
 
-function assignColorTV(tv, color) {
-    let clickCount = 0;
-    tv.addEventListener('click', () => {
-        const screen = tv.querySelector('.screen');
-        clickCount = (clickCount + 1) % 3; // Cycle through 0 (off), 1 (white glow), 2 (color glow)
-        updateScreen(screen, clickCount, color);
+function assignColorFunctionality(tv, color) {
+    tv.addEventListener('click', function() {
+        const screen = this.querySelector('.screen');
+        cycleState(screen, ['white-glow', `${color}-glow`]);
     });
 }
 
-function assignNumberTV(tv, number) {
-    let clickCount = 0;
+function assignNumberFunctionality(tv, number) {
     const screen = tv.querySelector('.screen');
     const numberDiv = document.createElement('div');
-    numberDiv.classList.add('screen-number', 'hidden');
+    numberDiv.classList.add('screen-number');
     numberDiv.textContent = number;
     screen.appendChild(numberDiv);
+    numberDiv.style.display = 'none'; // Initially hide the number
 
-    tv.addEventListener('click', () => {
-        clickCount = (clickCount + 1) % 3; // Cycle through 0 (off), 1 (white glow), 2 (white glow with number)
-        updateScreen(screen, clickCount, 'white', numberDiv);
+    tv.addEventListener('click', function() {
+        const isNumberVisible = numberDiv.style.display !== 'none';
+        cycleState(screen, ['white-glow'], isNumberVisible ? null : numberDiv);
     });
 }
 
-function assignWhiteTV(tv) {
-    tv.addEventListener('click', () => {
-        const screen = tv.querySelector('.screen');
-        screen.classList.toggle('white-glow'); // Toggle white glow
-        screen.classList.remove('color-glow'); // Ensure color glow is removed if present
+function assignWhiteFunctionality(tv) {
+    tv.addEventListener('click', function() {
+        const screen = this.querySelector('.screen');
+        cycleState(screen, ['white-glow']);
     });
 }
 
-function updateScreen(screen, clickCount, color = null, numberDiv = null) {
-    screen.className = 'screen'; // Reset classes
-    if (clickCount === 1) {
-        screen.classList.add('white-glow'); // First click: white glow
-        if (numberDiv) numberDiv.classList.add('hidden'); // Hide number if present
-    } else if (clickCount === 2) {
-        if (color) screen.classList.add(`${color}-glow`); // Second click for colored TVs: color glow
-        if (numberDiv) numberDiv.classList.remove('hidden'); // Show number for numbered TVs
+function cycleState(screen, states, numberDiv = null) {
+    const currentState = screen.dataset.state;
+    const nextStateIndex = states.indexOf(currentState) + 1 === states.length ? 0 : states.indexOf(currentState) + 1;
+    const nextState = states[nextStateIndex];
+
+    screen.dataset.state = nextState; // Update the state
+    screen.className = 'screen'; // Reset screen classes
+    if (nextState) {
+        screen.classList.add(nextState); // Apply the next state class
+        if (numberDiv && nextState === 'white-glow') {
+            numberDiv.style.display = 'block'; // Show number on white screen
+        } else if (numberDiv) {
+            numberDiv.style.display = 'none'; // Hide number otherwise
+        }
     }
 }
-
-// Additional CSS for the hidden class and glow effects
-.hidden { display: none; }
-.white-glow { background-color: white; box-shadow: 0 0 20px 10px white; } // Intense white glow
-.color-glow { box-shadow: 0 0 20px 10px; } // Placeholder for color glow, actual color set in JS
