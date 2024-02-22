@@ -8,14 +8,14 @@ body {
 }
 
 .tv-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(7, 150px); /* Creates a 7-column grid */
+  grid-auto-rows: 100px; /* Each row height */
+  gap: 20px; /* Space between TVs */
+  padding: 20px; /* Padding around the entire grid */
 }
 
 .tv {
-  width: 150px;
-  height: 100px;
   background: black;
   display: flex;
   justify-content: center;
