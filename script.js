@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-  let colors = ['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'pink'];
+  let colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'];
 
   // Function to shuffle the colors array
   function shuffleArray(array) {
