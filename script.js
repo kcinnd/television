@@ -1,71 +1,59 @@
 document.addEventListener('DOMContentLoaded', () => {
     const tvs = document.querySelectorAll('.tv');
-    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'violet']; // Colors for 6 TVs
-    let indices = Array.from({ length: tvs.length }, (_, index) => index);
+    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']; // Colors for 6 TVs
+    const indices = shuffle([...Array(tvs.length).keys()]);
 
-    shuffleArray(indices); // Shuffle the indices to randomly assign functionalities
-
-    // Assign color functionality to the first 6 TVs
-    indices.slice(0, 6).forEach((index, i) => {
-        assignColorFunctionality(tvs[index], colors[i]);
-    });
-
-    // Assign number functionality to the next 6 TVs
-    indices.slice(6, 12).forEach((index, i) => {
-        assignNumberFunctionality(tvs[index], i + 1); // Numbers 1-6
-    });
-
-    // Assign white functionality to the remaining TVs
-    indices.slice(12).forEach(index => {
-        assignWhiteFunctionality(tvs[index]);
-    });
+    // Assign functionalities based on shuffled indices
+    indices.slice(0, 6).forEach((index, i) => assignColorTV(tvs[index], colors[i]));
+    indices.slice(6, 12).forEach((index, i) => assignNumberTV(tvs[index], i + 1));
+    indices.slice(12).forEach(index => assignWhiteTV(tvs[index]));
 });
 
-function shuffleArray(array) {
+function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
 }
 
-function assignColorFunctionality(tv, color) {
-    let state = 0; // 0: off, 1: white, 2: color
+function assignColorTV(tv, color) {
+    let clickCount = 0;
     tv.addEventListener('click', () => {
         const screen = tv.querySelector('.screen');
-        state = (state + 1) % 3;
-        screen.className = 'screen'; // Reset class
-        if (state === 1) screen.classList.add('white');
-        else if (state === 2) screen.classList.add(color);
-    });
-}
-
-function assignNumberFunctionality(tv, number) {
-    let state = 0; // 0: off, 1: white (with number)
-    const screen = tv.querySelector('.screen');
-    const numberDiv = document.createElement('div');
-    numberDiv.classList.add('screen-number');
-    numberDiv.textContent = number;
-    screen.appendChild(numberDiv);
-    numberDiv.style.display = 'none';
-
-    tv.addEventListener('click', () => {
-        state = (state + 1) % 2;
-        screen.className = 'screen'; // Reset class
-        if (state === 1) {
-            screen.classList.add('white');
-            numberDiv.style.display = 'block';
-        } else {
-            numberDiv.style.display = 'none';
+        clickCount++;
+        if (clickCount === 1) screen.style.backgroundColor = 'white';
+        else if (clickCount === 2) screen.style.backgroundColor = color;
+        else {
+            screen.style.backgroundColor = '';
+            clickCount = 0; // Reset for cycling
         }
     });
 }
 
-function assignWhiteFunctionality(tv) {
-    let state = 0; // 0: off, 1: white
+function assignNumberTV(tv, number) {
+    let clickCount = 0;
     tv.addEventListener('click', () => {
         const screen = tv.querySelector('.screen');
-        state = (state + 1) % 2;
-        screen.className = 'screen'; // Reset class
-        if (state === 1) screen.classList.add('white');
+        clickCount++;
+        if (clickCount === 1) {
+            screen.style.backgroundColor = 'white';
+            screen.textContent = number; // Display the number
+        } else {
+            screen.style.backgroundColor = '';
+            screen.textContent = ''; // Clear the number
+            clickCount = 0; // Reset for cycling
+        }
+    });
+}
+
+function assignWhiteTV(tv) {
+    tv.addEventListener('click', () => {
+        const screen = tv.querySelector('.screen');
+        if (screen.style.backgroundColor === 'white') {
+            screen.style.backgroundColor = '';
+        } else {
+            screen.style.backgroundColor = 'white';
+        }
     });
 }
