@@ -1,8 +1,19 @@
 document.addEventListener('DOMContentLoaded', () => {
   let colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'];
+  const tvs = document.querySelectorAll('.tv');
 
-  // Function to shuffle the colors array
- function shuffleArray(array) {
+  // Randomly assign 'color-tv' class to 7 out of 35 TVs
+  let colorIndexes = new Set();
+  while (colorIndexes.size < 7) {
+    colorIndexes.add(Math.floor(Math.random() * tvs.length));
+  }
+
+  colorIndexes.forEach(index => {
+    tvs[index].classList.add('color-tv');
+  });
+
+  // Shuffle function for colors array, used for color TVs
+  function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
@@ -11,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   shuffleArray(colors);
 
-  // Click event for the first 7 color TVs
+  // Click event for color TVs
   document.querySelectorAll('.color-tv').forEach((tv, index) => {
     tv.setAttribute('data-click-state', 0);
 
@@ -19,7 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const screen = tv.querySelector('.screen');
       let clickState = parseInt(tv.getAttribute('data-click-state'));
 
-      // Cycling through white glow, specific color, and off
       switch (clickState) {
         case 0:
           screen.style.background = 'white';
@@ -40,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Click event for the remaining TVs
+  // Click event for the remaining TVs (white-only functionality)
   document.querySelectorAll('.tv:not(.color-tv)').forEach(tv => {
     tv.setAttribute('data-click-state', 0);
 
@@ -48,7 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const screen = tv.querySelector('.screen');
       let clickState = parseInt(tv.getAttribute('data-click-state'));
 
-      // Cycling through white glow and off
       switch (clickState) {
         case 0:
           screen.style.background = 'white';
