@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'pink'];
+    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'];
     const tvs = document.querySelectorAll('.tv');
 
     // Shuffle the array of TV elements
@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Assign a unique color and the 'color-tv' class to the first 7 shuffled TVs
     for (let i = 0; i < 7; i++) {
         shuffledTvs[i].classList.add('color-tv');
-        assignColor(shuffledTvs[i], colors[i]);
+        assignColorAndClickEvent(shuffledTvs[i], colors[i]);
     }
 
     // Function to shuffle an array
@@ -21,31 +21,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Function to assign color and add click event to a TV
-    function assignColor(tv, color) {
+    function assignColorAndClickEvent(tv, color) {
         const screen = tv.querySelector('.screen');
-        tv.setAttribute('data-click-state', 0); // Initialize click state
+        tv.setAttribute('data-click-state', 'off'); // Initialize click state
 
         tv.addEventListener('click', () => {
-            let clickState = parseInt(tv.getAttribute('data-click-state'));
+            const currentState = tv.getAttribute('data-click-state');
 
-            switch (clickState) {
-                case 0: // First click - Glow white
+            switch (currentState) {
+                case 'off':
                     screen.style.backgroundColor = 'white';
                     screen.style.boxShadow = '0 0 15px white';
+                    tv.setAttribute('data-click-state', 'white');
                     break;
-                case 1: // Second click - Show assigned color
+                case 'white':
                     screen.style.backgroundColor = color;
                     screen.style.boxShadow = `0 0 15px ${color}`;
+                    tv.setAttribute('data-click-state', 'color');
                     break;
-                case 2: // Third click - Turn off
+                case 'color':
                     screen.style.backgroundColor = '';
                     screen.style.boxShadow = '';
+                    tv.setAttribute('data-click-state', 'off');
                     break;
             }
-
-            // Update click state for next click
-            clickState = (clickState + 1) % 3;
-            tv.setAttribute('data-click-state', clickState);
         });
     }
 
