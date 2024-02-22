@@ -1,22 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
     const tvs = document.querySelectorAll('.tv');
-    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']; // Colors for 6 TVs
-    let indices = Array.from(Array(tvs.length).keys()); // Create an array of indices [0, 1, 2, ..., 34]
+    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'violet']; // Colors for 6 TVs
+    let indices = Array.from({ length: tvs.length }, (_, index) => index);
 
-    shuffleArray(indices); // Shuffle the array of indices to randomly distribute functionalities
+    shuffleArray(indices); // Shuffle the indices to randomly assign functionalities
 
-    // Assign functionalities based on the shuffled indices
-    // First 6 indices for colored TVs
+    // Assign color functionality to the first 6 TVs
     indices.slice(0, 6).forEach((index, i) => {
         assignColorFunctionality(tvs[index], colors[i]);
     });
 
-    // Next 6 indices for TVs with numbers
+    // Assign number functionality to the next 6 TVs
     indices.slice(6, 12).forEach((index, i) => {
         assignNumberFunctionality(tvs[index], i + 1); // Numbers 1-6
     });
 
-    // Remaining TVs for white-only functionality
+    // Assign white functionality to the remaining TVs
     indices.slice(12).forEach(index => {
         assignWhiteFunctionality(tvs[index]);
     });
@@ -30,44 +29,43 @@ function shuffleArray(array) {
 }
 
 function assignColorFunctionality(tv, color) {
-    tv.addEventListener('click', function() {
-        const screen = this.querySelector('.screen');
-        toggleScreen(screen, ['white', color]);
+    let state = 0; // 0: off, 1: white, 2: color
+    tv.addEventListener('click', () => {
+        const screen = tv.querySelector('.screen');
+        state = (state + 1) % 3;
+        screen.className = 'screen'; // Reset class
+        if (state === 1) screen.classList.add('white');
+        else if (state === 2) screen.classList.add(color);
     });
 }
 
 function assignNumberFunctionality(tv, number) {
+    let state = 0; // 0: off, 1: white (with number)
     const screen = tv.querySelector('.screen');
     const numberDiv = document.createElement('div');
     numberDiv.classList.add('screen-number');
     numberDiv.textContent = number;
     screen.appendChild(numberDiv);
+    numberDiv.style.display = 'none';
 
-    tv.addEventListener('click', function() {
-        toggleScreen(screen, ['white'], numberDiv);
+    tv.addEventListener('click', () => {
+        state = (state + 1) % 2;
+        screen.className = 'screen'; // Reset class
+        if (state === 1) {
+            screen.classList.add('white');
+            numberDiv.style.display = 'block';
+        } else {
+            numberDiv.style.display = 'none';
+        }
     });
 }
 
 function assignWhiteFunctionality(tv) {
-    tv.addEventListener('click', function() {
-        const screen = this.querySelector('.screen');
-        toggleScreen(screen, ['white']);
+    let state = 0; // 0: off, 1: white
+    tv.addEventListener('click', () => {
+        const screen = tv.querySelector('.screen');
+        state = (state + 1) % 2;
+        screen.className = 'screen'; // Reset class
+        if (state === 1) screen.classList.add('white');
     });
-}
-
-function toggleScreen(screen, states, numberDiv = null) {
-    let nextState = states[0]; // Default to the first state
-    if (screen.classList.contains('white') && states.length > 1) {
-        nextState = states[1];
-    } else if (screen.classList.contains(states[1])) {
-        nextState = ''; // Turn off the screen
-    }
-    
-    screen.className = 'screen'; // Reset classes
-    if (nextState) {
-        screen.classList.add(nextState);
-    }
-    if (numberDiv) {
-        numberDiv.style.display = nextState === 'white' ? 'block' : 'none';
-    }
 }
