@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'];
+    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'pink'];
     const tvs = document.querySelectorAll('.tv');
 
     // Shuffle the array of TV elements
@@ -23,16 +23,29 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to assign color and add click event to a TV
     function assignColor(tv, color) {
         const screen = tv.querySelector('.screen');
+        tv.setAttribute('data-click-state', 0); // Initialize click state
 
         tv.addEventListener('click', () => {
-            // Toggle color on click
-            if (screen.style.backgroundColor === color) {
-                screen.style.backgroundColor = '';
-                screen.style.boxShadow = '';
-            } else {
-                screen.style.backgroundColor = color;
-                screen.style.boxShadow = `0 0 15px ${color}`;
+            let clickState = parseInt(tv.getAttribute('data-click-state'));
+
+            switch (clickState) {
+                case 0: // First click - Glow white
+                    screen.style.backgroundColor = 'white';
+                    screen.style.boxShadow = '0 0 15px white';
+                    break;
+                case 1: // Second click - Show assigned color
+                    screen.style.backgroundColor = color;
+                    screen.style.boxShadow = `0 0 15px ${color}`;
+                    break;
+                case 2: // Third click - Turn off
+                    screen.style.backgroundColor = '';
+                    screen.style.boxShadow = '';
+                    break;
             }
+
+            // Update click state for next click
+            clickState = (clickState + 1) % 3;
+            tv.setAttribute('data-click-state', clickState);
         });
     }
 
