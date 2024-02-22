@@ -20,12 +20,13 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative; /* For absolute positioning of screen number */
 }
 
 .screen {
   width: 90%;
   height: 80%;
-  background: #000;
+  background: #000; /* Default screen color */
   transition: background 0.5s, box-shadow 0.5s;
   display: flex;
   justify-content: center;
@@ -33,33 +34,26 @@ body {
   position: relative; /* For positioning the number text */
 }
 
-/* Intense glow effect */
-.screen[data-click-state="white"] {
-  background: white;
-  box-shadow: 0 0 20px 10px white; /* Adjusted for more intensity */
+/* Intense white glow effect */
+.white-glow {
+  background-color: white;
+  box-shadow: 0 0 20px 10px white; /* Intense glow */
 }
 
-.screen[data-click-state="color"] {
-  /* The color and box-shadow will be set dynamically via JavaScript */
-  box-shadow: 0 0 20px 10px; /* Placeholder for intense glow, color set in JS */
-}
+/* Color-specific glow effects */
+.red-glow { background-color: red; box-shadow: 0 0 20px 10px red; }
+.orange-glow { background-color: orange; box-shadow: 0 0 20px 10px orange; }
+.yellow-glow { background-color: yellow; box-shadow: 0 0 20px 10px yellow; }
+.green-glow { background-color: green; box-shadow: 0 0 20px 10px green; }
+.blue-glow { background-color: blue; box-shadow: 0 0 20px 10px blue; }
+.violet-glow { background-color: violet; box-shadow: 0 0 20px 10px violet; }
 
 /* Style for the number displayed on the screen */
 .screen-number {
   color: black;
   font-size: 2rem; /* Adjust size as needed */
-  display: none; /* Hidden by default, shown when the screen is white */
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
-.red { background: red; box-shadow: 0 0 20px 10px red; }
-.orange { background: orange; box-shadow: 0 0 20px 10px orange; }
-.yellow { background: yellow; box-shadow: 0 0 20px 10px yellow; }
-.green { background: green; box-shadow: 0 0 20px 10px green; }
-.blue { background: blue; box-shadow: 0 0 20px 10px blue; }
-.purple { background: purple; box-shadow: 0 0 20px 10px purple; }
-}
-
