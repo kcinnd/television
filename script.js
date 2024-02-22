@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
-  let colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'];
+  let colors = ['red', 'orange', 'yellow', 'green', 'blue', 'violet', 'pink'];
+
+  // Function to shuffle the colors array
   function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -9,16 +11,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Shuffle the colors array for random assignment
   shuffleArray(colors);
+
+  // Set up click event listeners for each TV
   document.querySelectorAll('.tv').forEach((tv, index) => {
+    tv.setAttribute('data-click-state', 0); // Initialize click state
+
     tv.addEventListener('click', () => {
       const screen = tv.querySelector('.screen');
-      // Check if the screen already has the color class
-      if (screen.classList.contains(colors[index % colors.length])) {
-        screen.className = 'screen'; // Reset to just 'screen' class to turn it back to black
-      } else {
-        screen.className = 'screen'; // Reset classes
-        screen.classList.add(colors[index % colors.length]); // Add the specific color class
+      let clickState = parseInt(tv.getAttribute('data-click-state'));
+
+      switch (clickState) {
+        case 0:
+          screen.style.background = 'white';
+          screen.style.boxShadow = '0 0 15px white';
+          break;
+        case 1:
+          screen.style.background = colors[index % colors.length];
+          screen.style.boxShadow = `0 0 15px ${colors[index % colors.length]}`;
+          break;
+        case 2:
+          screen.style.background = '#000';
+          screen.style.boxShadow = 'none';
+          break;
       }
+
+      clickState = (clickState + 1) % 3; // Update click state
+      tv.setAttribute('data-click-state', clickState);
     });
   });
 });
