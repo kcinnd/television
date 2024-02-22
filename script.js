@@ -31,12 +31,12 @@ document.addEventListener('DOMContentLoaded', () => {
             switch (currentState) {
                 case 'off':
                     screen.style.backgroundColor = 'white';
-                    screen.style.boxShadow = '0 0 15px white';
+                    screen.style.boxShadow = '0 0 20px 10px white';
                     tv.setAttribute('data-click-state', 'white');
                     break;
                 case 'white':
                     screen.style.backgroundColor = color;
-                    screen.style.boxShadow = `0 0 15px ${color}`;
+                    screen.style.boxShadow = `0 0 20px 10px ${color}`;
                     tv.setAttribute('data-click-state', 'color');
                     break;
                 case 'color':
