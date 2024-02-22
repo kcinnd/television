@@ -1,70 +1,78 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']; // 6 colors for the colored TVs
+    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple']; // Colors for the first 6 colored TVs
     const tvs = document.querySelectorAll('.tv');
 
-    // Shuffle the array of TV elements
-    let shuffledTvs = shuffleArray([...tvs]);
-
-    // Assign a unique color and the 'color-tv' class to the first 6 shuffled TVs
-    // Also, assign numbers 1-6 to their screens
+    // Assign colors to the first 6 TVs
     for (let i = 0; i < 6; i++) {
-        shuffledTvs[i].classList.add('color-tv');
-        assignColorAndClickEvent(shuffledTvs[i], colors[i], i + 1); // Pass the number to be displayed
+        assignColor(tvs[i], colors[i]);
     }
 
-    // Function to shuffle an array
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]]; // Swap elements
-        }
-        return array;
+    // Assign numbers to the next 6 TVs
+    for (let i = 6; i < 12; i++) {
+        assignNumber(tvs[i], i - 5); // Numbers 1-6
     }
 
-    // Function to assign color, number, and add click event to a TV
-    function assignColorAndClickEvent(tv, color, number) {
-        const screen = tv.querySelector('.screen');
-        tv.setAttribute('data-click-state', 'off'); // Initialize click state
-
-        // Create and append the number div
-        const numberDiv = document.createElement('div');
-        numberDiv.classList.add('screen-number');
-        numberDiv.textContent = number; // Set the number text
-        screen.appendChild(numberDiv);
-
-        tv.addEventListener('click', () => {
-            let clickState = tv.getAttribute('data-click-state');
-
-            switch (clickState) {
-                case 'off':
-                    screen.className = 'screen white-glow';
-                    numberDiv.style.display = 'block'; // Show the number
-                    tv.setAttribute('data-click-state', 'white');
-                    break;
-                case 'white':
-                    screen.className = 'screen ' + color + '-glow';
-                    numberDiv.style.display = 'none'; // Hide the number
-                    tv.setAttribute('data-click-state', 'color');
-                    break;
-                case 'color':
-                    screen.className = 'screen';
-                    tv.setAttribute('data-click-state', 'off');
-                    break;
-            }
-        });
+    // The rest of the TVs only turn white
+    for (let i = 12; i < tvs.length; i++) {
+        assignWhiteOnly(tvs[i]);
     }
-
-    // Event listeners for the remaining TVs (white-only functionality)
-    tvs.forEach(tv => {
-        if (!tv.classList.contains('color-tv')) {
-            tv.addEventListener('click', () => {
-                const screen = tv.querySelector('.screen');
-                if (screen.style.backgroundColor === 'white') {
-                    screen.className = 'screen';
-                } else {
-                    screen.className = 'screen white-glow';
-                }
-            });
-        }
-    });
 });
+
+function assignColor(tv, color) {
+    let clickState = 0; // 0: off, 1: white, 2: color
+
+    tv.addEventListener('click', () => {
+        const screen = tv.querySelector('.screen');
+        clickState = (clickState + 1) % 3;
+        updateScreen(screen, clickState, color);
+    });
+}
+
+function assignNumber(tv, number) {
+    let clickState = 0; // 0: off, 1: white, 2: number
+    const screen = tv.querySelector('.screen');
+    const numberDiv = document.createElement('div');
+    numberDiv.classList.add('screen-number');
+    numberDiv.textContent = number;
+    screen.appendChild(numberDiv);
+
+    tv.addEventListener('click', () => {
+        clickState = (clickState + 1) % 3;
+        updateScreen(screen, clickState, null, numberDiv);
+    });
+}
+
+function assignWhiteOnly(tv) {
+    let clickState = 0; // 0: off, 1: white
+
+    tv.addEventListener('click', () => {
+        const screen = tv.querySelector('.screen');
+        clickState = (clickState + 1) % 2;
+        updateScreen(screen, clickState);
+    });
+}
+
+function updateScreen(screen, state, color = null, numberDiv = null) {
+    switch (state) {
+        case 0: // Off
+            screen.style.backgroundColor = '';
+            screen.style.boxShadow = '';
+            if (numberDiv) numberDiv.style.display = 'none';
+            break;
+        case 1: // White
+            screen.style.backgroundColor = 'white';
+            screen.style.boxShadow = '0 0 20px 10px white';
+            if (numberDiv) numberDiv.style.display = 'block';
+            break;
+        case 2: // Color or Number
+            if (color) {
+                screen.style.backgroundColor = color;
+                screen.style.boxShadow = `0 0 20px 10px ${color}`;
+            } else if (numberDiv) {
+                screen.style.backgroundColor = ''; // Or any background color you want for the number state
+                screen.style.boxShadow = 'none';
+                numberDiv.style.display = 'none'; // Hide the number again
+            }
+            break;
+    }
+}
