@@ -1,12 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'];
+    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple'];
     const tvs = document.querySelectorAll('.tv');
 
     // Shuffle the array of TV elements
     let shuffledTvs = shuffleArray([...tvs]);
 
     // Assign a unique color and the 'color-tv' class to the first 7 shuffled TVs
-    for (let i = 0; i < 7; i++) {
+    for (let i = 0; i < 6; i++) {
         shuffledTvs[i].classList.add('color-tv');
         assignColorAndClickEvent(shuffledTvs[i], colors[i]);
     }
