@@ -1,76 +1,55 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'];
-  const tvs = document.querySelectorAll('.tv');
+    const colors = ['red', 'orange', 'yellow', 'green', 'blue', 'purple', 'pink'];
+    const tvs = document.querySelectorAll('.tv');
 
-  // Randomly assign 'color-tv' class to 7 out of 35 TVs
-  const shuffledIndices = shuffleArray([...Array(tvs.length).keys()]).slice(0, 7);
+    // Shuffle the array of TV elements
+    let shuffledTvs = shuffleArray([...tvs]);
 
-  shuffledIndices.forEach(index => {
-    tvs[index].classList.add('color-tv');
-  });
-
-  // Function to shuffle an array and return a new array
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    // Assign a unique color and the 'color-tv' class to the first 7 shuffled TVs
+    for (let i = 0; i < 7; i++) {
+        shuffledTvs[i].classList.add('color-tv');
+        assignColor(shuffledTvs[i], colors[i]);
     }
-    return array;
-  }
 
-  // Click event for color TVs
-  document.querySelectorAll('.color-tv').forEach((tv, index) => {
-    tv.setAttribute('data-click-state', 0);
-
-    tv.addEventListener('click', () => {
-      const screen = tv.querySelector('.screen');
-      let clickState = parseInt(tv.getAttribute('data-click-state'));
-
-      switch (clickState) {
-        case 0:
-          screen.style.background = 'white';
-          screen.style.boxShadow = '0 0 15px white';
-          break;
-        case 1:
-          // Use shuffledIndices[index] to get the correct color
-          const colorIndex = shuffledIndices[index];
-          screen.style.background = colors[colorIndex % colors.length];
-          screen.style.boxShadow = `0 0 15px ${colors[colorIndex % colors.length]}`;
-          break;
-        case 2:
-          screen.style.background = '#000';
-          screen.style.boxShadow = 'none';
-          break;
-      }
-
-      clickState = (clickState + 1) % 3;
-      tv.setAttribute('data-click-state', clickState);
-    });
-  });
-
-  // Click event for the remaining TVs (white-only functionality)
-  tvs.forEach(tv => {
-    if (!tv.classList.contains('color-tv')) {
-      tv.setAttribute('data-click-state', 0);
-
-      tv.addEventListener('click', () => {
-        const screen = tv.querySelector('.screen');
-        let clickState = parseInt(tv.getAttribute('data-click-state'));
-
-        switch (clickState) {
-          case 0:
-            screen.style.background = 'white';
-            screen.style.boxShadow = '0 0 15px white';
-            break;
-          case 1:
-            screen.style.background = '#000';
-            screen.style.boxShadow = 'none';
-            break;
+    // Function to shuffle an array
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]]; // Swap elements
         }
-
-        clickState = (clickState + 1) % 2; // Two states for non-color TVs
-        tv.setAttribute('data-click-state', clickState);
-      });
+        return array;
     }
-  });
+
+    // Function to assign color and add click event to a TV
+    function assignColor(tv, color) {
+        const screen = tv.querySelector('.screen');
+
+        tv.addEventListener('click', () => {
+            // Toggle color on click
+            if (screen.style.backgroundColor === color) {
+                screen.style.backgroundColor = '';
+                screen.style.boxShadow = '';
+            } else {
+                screen.style.backgroundColor = color;
+                screen.style.boxShadow = `0 0 15px ${color}`;
+            }
+        });
+    }
+
+    // Event listeners for the remaining TVs (white-only functionality)
+    tvs.forEach(tv => {
+        if (!tv.classList.contains('color-tv')) {
+            tv.addEventListener('click', () => {
+                const screen = tv.querySelector('.screen');
+                // Toggle white glow and off
+                if (screen.style.backgroundColor === 'white') {
+                    screen.style.backgroundColor = '';
+                    screen.style.boxShadow = '';
+                } else {
+                    screen.style.backgroundColor = 'white';
+                    screen.style.boxShadow = '0 0 15px white';
+                }
+            });
+        }
+    });
 });
